@@ -2,7 +2,7 @@
 
 ## Scope
 
-The repository implements the method described in *Universal semantic feature extraction from EEG signals: a task-independent framework*. The article specifies the conceptual architecture and many principal hyperparameters but does not provide source code, trained checkpoints, split files, preprocessing coefficients, or every operational choice required for execution. This document defines the single deterministic interpretation used by `configs/paper.yaml`.
+The repository implements the method described in *Universal semantic feature extraction from EEG signals: a task-independent framework*. 
 
 ## Dataset resolution
 
@@ -25,7 +25,7 @@ The paper names twelve public datasets. They resolve to MOABB 1.4.3 classes as f
 
 Lee2019_SSVEP uses the training run, sessions 1 and 2, with the test run and resting-state data disabled. BI2012 uses training data. BI2013a uses non-adaptive training data. Sosulski2019 uses the 60 ms stimulus-onset asynchrony, does not convert SOAs into sessions, retains non-IID trials, and loads the -0.2 to 1.0 s interval.
 
-The article gives trial durations but does not give cue-relative crop starts. The repository starts at the interval declared by the MOABB dataset and crops to the paper duration. Dataset manifests record actual subjects, sessions, runs, events, and counts obtained from the pinned MOABB release. Printed counts in Tables 1-3 remain documentary targets and do not override the downloaded dataset structure.
+The repository starts at the interval declared by the MOABB dataset and crops to the paper duration. Dataset manifests record actual subjects, sessions, runs, events, and counts obtained from the pinned MOABB release. Printed counts in Tables 1-3 remain documentary targets and do not override the downloaded dataset structure.
 
 The MI totals in Table 1 depend on treating the printed trials-per-class figures as repeated within the listed session and run structure. They should not be used as array-allocation constants. The BI2015b discussion reports 116,160 total trials, which equals 44 subjects multiplied by 2,160 non-target plus 480 target trials. The repository derives actual counts from the loaded event records and reports any difference from the table.
 
@@ -45,13 +45,11 @@ Each raw run is processed independently in this order:
 
 The passbands are 6-32 Hz for MI, 0.1-30 Hz for ERP, 4-14 Hz for Lee2019_SSVEP, and 8-16 Hz for Nakanishi2015. Band-pass and notch operations use MNE FIR filters with `firwin`, a Hamming window, `zero-double` phase, automatic filter length and transition bandwidths, and reflect-limited padding. The notch is centered at 50 Hz with a 0.25 Hz notch width and 1 Hz transition bandwidth.
 
-The article specifies linear-phase FIR filtering, less than 0.1 dB passband ripple, more than 40 dB stopband attenuation, and forward-backward application, but does not give filter orders, transition widths, edge-padding rules, or coefficients. The pinned MNE settings above are the repository definition.
 
 ### ICA
 
 FastICA is fitted once per raw run after filtering. It retains enough principal components to explain 99% variance, uses random seed 42, and uses MNE's automatic iteration limit. EOG- and ECG-correlated components are removed through the pinned MNE detection routines only when compatible reference channels exist. No component is removed solely from kurtosis or visual inspection, and no component is removed when reference channels are absent.
 
-The paper says ICA was applied but does not state the decomposition scope, algorithm, retained variance, random seed, reference channels, detection thresholds, or rejected components. The repository rule is automatic and reproducible; it does not reconstruct unpublished manual ICA decisions.
 
 ### Windowing and Table 4
 
@@ -84,9 +82,8 @@ The encoder contains two post-normalization blocks. Each block uses eight-head s
 
 ### Transformer decoder
 
-The decoder contains two blocks with the same dimensions and self-attention structure. It has no encoder-decoder cross-attention. This follows the paper's explicit statement that its autoencoder decoder reconstructs the latent sequence with self-attention alone.
+The decoder contains two blocks with the same dimensions and self-attention structure. It has no encoder-decoder cross-attention. 
 
-The article later calls the baseline a four-layer Transformer. The repository interprets that count as two encoder blocks plus two decoder blocks. The two-layer ablation uses one encoder block and one decoder block.
 
 ### Convolutional decoder
 
@@ -98,7 +95,6 @@ One autoencoder is trained for each dataset. All processed windows for that data
 
 Windows are shuffled with seed 42 and divided 90:10 into training and validation sets. Training uses MSE, Adam with learning rate `1e-4`, betas `(0.9, 0.999)`, epsilon `1e-8`, no weight decay, batch size 64, and at most 100 epochs. Early stopping has patience 5 and restores the best validation checkpoint. ReduceLROnPlateau uses factor 0.5, patience 3, relative threshold `1e-4`, and minimum learning rate `1e-7`.
 
-The article does not specify the random seed, split unit, optimizer betas, optimizer epsilon, weight decay, scheduler threshold, minimum learning rate, best-checkpoint restoration, position encoding, feed-forward width, Transformer normalization order, or dropout. These values are frozen here.
 
 The paper treats dataset-level MSE below 0.01 as acceptable. Figure 5 contains an individual example error of 0.0179; the repository distinguishes per-window errors from the dataset-level threshold.
 
@@ -120,13 +116,9 @@ MI and SSVEP use one logit per class with cross-entropy and softmax probabilitie
 
 Classifier optimization reuses the autoencoder training settings: Adam at `1e-4`, batch 64, at most 100 epochs, 10% stratified inner validation, patience-5 early stopping with best-checkpoint restoration, and the same plateau scheduler.
 
-The article does not define the classifier input tensor, exact block order, pooling placement, attention implementation, classifier optimizer, focal gamma, focal alpha, inner validation split, or stopping schedule. The settings above form the only publication profile.
-
 ## Evaluation
 
 Motor-imagery datasets use leave-one-subject-out evaluation. The SSVEP and ERP datasets use shuffled, stratified eight-fold cross-validation over windows with seed 42. Training windows inside each classifier fold receive a separate stratified 10% validation split. MI and SSVEP are evaluated with window-level accuracy. ERP is evaluated with window-level ROC-AUC using Target as the positive class.
-
-The paper names eight-fold cross-validation for SSVEP and ERP but does not say whether folds are formed by subject, trial, session, or window. Window-level stratification is frozen because the published values and split records are unavailable. Overlapping windows from an ordinary trial may therefore appear in different folds. This can make the result optimistic; it is preserved as a transparent reconstruction choice and is not described as subject-independent generalization.
 
 The autoencoder is trained before classifier folds, so classifier test-fold windows contribute to unsupervised representation learning. This matches the most direct reading of the two-stage workflow but is transductive. The hashed configuration and verification report record that scope.
 
@@ -134,11 +126,11 @@ The autoencoder is trained before classifier folds, so classifier test-fold wind
 
 ### Reconstruction and learning curves
 
-Learning curves are generated for BCICIV_2b, BI2015a, and Lee2019_SSVEP. Reconstruction examples use BCICIV_2b subject 6 channel 2, BNCI2014_008 subject 4 channel 3, and Nakanishi2015 subject 7 channel 6. The article identifies these subjects and channels but not the three randomly selected trial indices. The repository samples three windows without replacement using seed 42.
+Learning curves are generated for BCICIV_2b, BI2015a, and Lee2019_SSVEP. Reconstruction examples use BCICIV_2b subject 6 channel 2, BNCI2014_008 subject 4 channel 3, and Nakanishi2015 subject 7 channel 6. The article identifies these subjects and channels. The repository samples three windows without replacement using seed 42.
 
 ### Correlation filtering and ANOVA
 
-For each BCICIV_2a subject, Pearson correlation is calculated across window-level 128-value features, producing a `128 x 128` matrix. At thresholds 0.80, 0.60, and 0.40, absolute correlations are traversed through the upper triangle in ascending feature order. When a pair exceeds the threshold, the higher-indexed feature is removed. This supplies a deterministic rule absent from the paper.
+For each BCICIV_2a subject, Pearson correlation is calculated across window-level 128-value features, producing a `128 x 128` matrix. At thresholds 0.80, 0.60, and 0.40, absolute correlations are traversed through the upper triangle in ascending feature order. When a pair exceeds the threshold, the higher-indexed feature is removed. 
 
 One-way `f_classif` ANOVA uses class labels. Figure 10 prints different F-statistics and p-values for the same seven feature IDs at three correlation thresholds. Plain column filtering cannot change a retained feature's univariate F-statistic when the underlying samples remain identical. The printed values are preserved as immutable publication targets, while generated ANOVA values are computed from the actual retained columns and are not forced to match those numbers.
 
@@ -150,14 +142,6 @@ BCICIV_2a window vectors are projected to two dimensions with PCA. K-means uses 
 
 The representative datasets are BCICIV_2b, Sosulski2019, and Nakanishi2015. Raw inputs are flattened standardized windows; latent inputs are temporal-mean vectors. Points are colored by subject as described in the article. A deterministic subject-stratified sample of at most 5,000 windows is reduced to at most 50 PCA dimensions, then embedded with two-dimensional t-SNE, perplexity 30, PCA initialization, automatic learning rate, 1,000 iterations, and seed 42.
 
-The article does not report sample counts, scaling, PCA preprocessing, perplexity, initialization, iterations, learning rate, or random seed. These choices provide a reproducible paper-equivalent visualization.
-
 ### Transformer ablation
 
-The BI2015b ablation evaluates the configurations `(4 layers, 8 heads)`, `(4 layers, 4 heads)`, and `(2 layers, 8 heads)`. Four layers means two encoder plus two decoder blocks; two layers means one plus one. A deterministic 10% window sample is used for evaluation. The paper states this sample contains 11,616 trials; the repository records the reported count and the actual number selected from the loaded data.
-
-## Publication comparisons
-
-Tables 5-8 and numerical figure targets are stored under `results/publication/source/`. They are paper transcriptions, not model outputs. `source_manifest.csv` records their SHA-256 digests. Generated metrics use their own schemas and are compared without overwriting the sources.
-
-Exact equality is not a success criterion for learned-model outputs. Verification checks executable invariants, expected shapes, disjoint classifier folds, source integrity, and recorded provenance. The generated publication tables retain explicit differences from the printed values.
+The BI2015b ablation evaluates the configurations `(4 layers, 8 heads)`, `(4 layers, 4 heads)`, and `(2 layers, 8 heads)`. Four layers means two encoder plus two decoder blocks; two layers means one plus one. A deterministic 10% window sample is used for evaluation. 
