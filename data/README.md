@@ -17,7 +17,7 @@ The repository downloads public EEG recordings through MOABB 1.4.3. Raw archives
 | `bnci2014_009` | BNCI2014_009 | `BNCI2014_009` | P300 | Complete public dataset |
 | `sosulski2019` | Sosulski2019 | `Sosulski2019` | P300 | 60 ms SOA, SOAs not treated as sessions, non-IID trials retained, interval -0.2 to 1.0 s |
 
-The event interval starts at the interval declared by the corresponding MOABB dataset and is cropped to the duration printed in Tables 1-3 of the article. The paper does not provide cue-relative offsets, so no additional offset is introduced.
+The event interval starts at the interval declared by the corresponding MOABB dataset and is cropped to the duration printed in Tables 1-3 of the article. 
 
 The canonical label mapping is fixed in `configs/paper.yaml`. MI labels are left hand, right hand, feet, and tongue for BCICIV_2a and left hand/right hand for BCICIV_2b. SSVEP labels follow ascending stimulus frequency. ERP labels are `NonTarget=0` and `Target=1`.
 
