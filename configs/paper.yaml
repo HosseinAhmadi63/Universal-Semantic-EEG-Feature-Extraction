@@ -1,0 +1,677 @@
+project:
+  name: Universal Semantic EEG Feature Extraction
+  package: useeg
+  version: 1.0.0
+  profile: paper
+  repository: https://github.com/HosseinAhmadi63/Universal-Semantic-EEG-Feature-Extraction
+  article:
+    title: "Universal semantic feature extraction from EEG signals: a task-independent framework"
+    authors:
+      - Hossein Ahmadi
+      - Luca Mesin
+    journal: Journal of Neural Engineering
+    year: 2025
+    volume: 22
+    issue: 3
+    article_number: "036003"
+    doi: 10.1088/1741-2552/add08f
+seed: 42
+device: auto
+deterministic: true
+reproducibility:
+  config_hash_algorithm: sha256
+  config_hash_length: 12
+  torch_deterministic_algorithms: true
+  cudnn_benchmark: false
+  cudnn_deterministic: true
+  python_hash_seed: 42
+  float_dtype: float32
+paths:
+  data_raw: data/raw
+  data_processed: data/processed
+  runs: results/runs
+  publication_source: results/publication/source
+  publication_generated: results/publication/generated
+  verification: results/verification
+data:
+  accept_dataset_terms: true
+  cache_downloads: true
+  overwrite_downloads: false
+  reject_by_annotation: true
+  picks: eeg
+  event_interval_policy: moabb_start_and_paper_duration
+  ordering:
+    - bnci2014_001
+    - bnci2014_004
+    - lee2019_ssvep
+    - nakanishi2015
+    - bi2012
+    - bi2013a
+    - bi2014b
+    - bi2015a
+    - bi2015b
+    - bnci2014_008
+    - bnci2014_009
+    - sosulski2019
+datasets:
+  - name: bnci2014_001
+    paper_name: BCICIV_2a
+    moabb_class: BNCI2014_001
+    paradigm: mi
+    enabled: true
+    subjects: all
+    constructor_kwargs: {}
+    selection: {}
+    labels:
+      left_hand: 0
+      right_hand: 1
+      feet: 2
+      tongue: 3
+    paper_attributes:
+      subjects: 9
+      channels: 22
+      classes: 4
+      trials_per_class: 144
+      trial_duration_seconds: 4.0
+      sampling_rate_hz: 250
+      sessions: 2
+      runs: 6
+      reported_total_trials: 62208
+  - name: bnci2014_004
+    paper_name: BCICIV_2b
+    moabb_class: BNCI2014_004
+    paradigm: mi
+    enabled: true
+    subjects: all
+    constructor_kwargs: {}
+    selection: {}
+    labels:
+      left_hand: 0
+      right_hand: 1
+    paper_attributes:
+      subjects: 9
+      channels: 3
+      classes: 2
+      trials_per_class: 360
+      trial_duration_seconds: 4.5
+      sampling_rate_hz: 250
+      sessions: 5
+      runs: 1
+      reported_total_trials: 32400
+  - name: lee2019_ssvep
+    paper_name: Lee2019_SSVEP
+    moabb_class: Lee2019_SSVEP
+    paradigm: ssvep
+    enabled: true
+    subjects: all
+    constructor_kwargs:
+      train_run: true
+      test_run: false
+      resting_state: false
+    selection:
+      sessions:
+        - 1
+        - 2
+    labels:
+      "5.45": 0
+      "6.67": 1
+      "8.57": 2
+      "12.00": 3
+    paper_attributes:
+      subjects: 54
+      channels: 62
+      classes: 4
+      trials_per_class: 50
+      trial_duration_seconds: 4.0
+      sampling_rate_hz: 1000
+      sessions: 2
+  - name: nakanishi2015
+    paper_name: Nakanishi2015
+    moabb_class: Nakanishi2015
+    paradigm: ssvep
+    enabled: true
+    subjects: all
+    constructor_kwargs: {}
+    selection: {}
+    labels:
+      "9.25": 0
+      "9.75": 1
+      "10.25": 2
+      "10.75": 3
+      "11.25": 4
+      "11.75": 5
+      "12.25": 6
+      "12.75": 7
+      "13.25": 8
+      "13.75": 9
+      "14.25": 10
+      "14.75": 11
+    paper_attributes:
+      subjects: 9
+      channels: 8
+      classes: 12
+      trials_per_class: 15
+      trial_duration_seconds: 4.15
+      sampling_rate_hz: 256
+      sessions: 1
+  - name: bi2012
+    paper_name: BI2012
+    moabb_class: BI2012
+    paradigm: erp
+    enabled: true
+    subjects: all
+    constructor_kwargs: {}
+    selection:
+      training_only: true
+    labels:
+      NonTarget: 0
+      Target: 1
+    paper_attributes:
+      subjects: 25
+      channels: 16
+      non_target_trials: 640
+      target_trials: 128
+      trial_duration_seconds: 1.0
+      sampling_rate_hz: 128
+      sessions: 2
+  - name: bi2013a
+    paper_name: BI2013a
+    moabb_class: BI2013a
+    paradigm: erp
+    enabled: true
+    subjects: all
+    constructor_kwargs: {}
+    selection:
+      nonadaptive_training_only: true
+    labels:
+      NonTarget: 0
+      Target: 1
+    paper_attributes:
+      subjects: 24
+      channels: 16
+      non_target_trials: 3200
+      target_trials: 640
+      trial_duration_seconds: 1.0
+      sampling_rate_hz: 512
+      sessions: variable
+      session_rule: eight_for_subjects_1_to_7_one_for_other_subjects
+  - name: bi2014b
+    paper_name: BI2014b
+    moabb_class: BI2014b
+    paradigm: erp
+    enabled: true
+    subjects: all
+    constructor_kwargs: {}
+    selection: {}
+    labels:
+      NonTarget: 0
+      Target: 1
+    paper_attributes:
+      subjects: 38
+      channels: 32
+      non_target_trials: 200
+      target_trials: 40
+      trial_duration_seconds: 1.0
+      sampling_rate_hz: 512
+      sessions: 3
+  - name: bi2015a
+    paper_name: BI2015a
+    moabb_class: BI2015a
+    paradigm: erp
+    enabled: true
+    subjects: all
+    constructor_kwargs: {}
+    selection: {}
+    labels:
+      NonTarget: 0
+      Target: 1
+    paper_attributes:
+      subjects: 43
+      channels: 32
+      non_target_trials: 4131
+      target_trials: 825
+      trial_duration_seconds: 1.0
+      sampling_rate_hz: 512
+      sessions: 3
+  - name: bi2015b
+    paper_name: BI2015b
+    moabb_class: BI2015b
+    paradigm: erp
+    enabled: true
+    subjects: all
+    constructor_kwargs: {}
+    selection: {}
+    labels:
+      NonTarget: 0
+      Target: 1
+    paper_attributes:
+      subjects: 44
+      channels: 32
+      non_target_trials: 2160
+      target_trials: 480
+      trial_duration_seconds: 1.0
+      sampling_rate_hz: 512
+      sessions: 1
+  - name: bnci2014_008
+    paper_name: BNCI2014_008
+    moabb_class: BNCI2014_008
+    paradigm: erp
+    enabled: true
+    subjects: all
+    constructor_kwargs: {}
+    selection: {}
+    labels:
+      NonTarget: 0
+      Target: 1
+    paper_attributes:
+      subjects: 8
+      channels: 8
+      non_target_trials: 3500
+      target_trials: 700
+      trial_duration_seconds: 1.0
+      sampling_rate_hz: 256
+      sessions: 1
+  - name: bnci2014_009
+    paper_name: BNCI2014_009
+    moabb_class: BNCI2014_009
+    paradigm: erp
+    enabled: true
+    subjects: all
+    constructor_kwargs: {}
+    selection: {}
+    labels:
+      NonTarget: 0
+      Target: 1
+    paper_attributes:
+      subjects: 10
+      channels: 16
+      non_target_trials: 1440
+      target_trials: 288
+      trial_duration_seconds: 0.8
+      sampling_rate_hz: 256
+      sessions: 3
+  - name: sosulski2019
+    paper_name: Sosulski2019
+    moabb_class: Sosulski2019
+    paradigm: erp
+    enabled: true
+    subjects: all
+    constructor_kwargs:
+      use_soas_as_sessions: false
+      load_soa_60: true
+      reject_non_iid: false
+      interval:
+        - -0.2
+        - 1.0
+    selection: {}
+    labels:
+      NonTarget: 0
+      Target: 1
+    paper_attributes:
+      subjects: 13
+      channels: 31
+      non_target_trials: 7500
+      target_trials: 1500
+      trial_duration_seconds: 1.2
+      sampling_rate_hz: 1000
+      sessions: 1
+preprocessing:
+  operation_order:
+    - resample
+    - bandpass
+    - notch
+    - ica
+    - crop
+    - window
+    - standardize
+  sfreq: 128
+  filters:
+    mi:
+      l_freq: 6.0
+      h_freq: 32.0
+    erp:
+      l_freq: 0.1
+      h_freq: 30.0
+    lee2019_ssvep:
+      l_freq: 4.0
+      h_freq: 14.0
+    nakanishi2015:
+      l_freq: 8.0
+      h_freq: 16.0
+    method: fir
+    design: firwin
+    window: hamming
+    phase: zero-double
+    filter_length: auto
+    l_trans_bandwidth: auto
+    h_trans_bandwidth: auto
+    pad: reflect_limited
+  notch:
+    frequency_hz: 50.0
+    method: fir
+    design: firwin
+    window: hamming
+    phase: zero-double
+    filter_length: auto
+    notch_width_hz: 0.25
+    transition_bandwidth_hz: 1.0
+  ica:
+    enabled: true
+    method: fastica
+    fit_scope: raw_run
+    n_components: 0.99
+    max_iter: auto
+    random_state: 42
+    reject_by_annotation: true
+    component_exclusion:
+      eog: mne_find_bads_eog_if_reference_exists
+      ecg: mne_find_bads_ecg_if_reference_exists
+      no_reference_fallback: exclude_none
+  window:
+    size_seconds: 1.0
+    size_samples: 128
+    hop_seconds: 0.5
+    hop_samples: 64
+    mode: overlapping_full_windows
+    pad_mode: constant
+    pad_value: 0.0
+    include_partial_tail: false
+    overrides:
+      bnci2014_009:
+        mode: single_right_padded_window
+        hop_samples: 128
+        include_partial_tail: true
+      sosulski2019:
+        mode: nonoverlapping_full_windows_and_right_padded_tail
+        hop_samples: 128
+        include_partial_tail: true
+      nakanishi2015:
+        mode: nonoverlapping_full_windows_and_right_padded_tail
+        hop_samples: 128
+        include_partial_tail: true
+      bnci2014_004:
+        mode: nonoverlapping_full_windows_and_right_padded_tail
+        hop_samples: 128
+        include_partial_tail: true
+  standardization:
+    scope: window_channel_across_time
+    center: true
+    scale: true
+    epsilon: 1.0e-8
+autoencoder:
+  training_scope: per_dataset_all_windows_before_downstream_cross_validation
+  input_layout: batch_time_channels
+  input_samples: 128
+  encoder_conv_filters:
+    - 64
+    - 128
+  encoder_kernel_size: 3
+  encoder_padding: same
+  encoder_activation: relu
+  encoder_layer_norm_epsilon: 1.0e-5
+  d_model: 128
+  positional_encoding: sinusoidal
+  nhead: 8
+  num_encoder_layers: 2
+  num_decoder_layers: 2
+  decoder_attention: self_attention_only
+  dim_feedforward: 512
+  attention_dropout: 0.0
+  feedforward_dropout: 0.0
+  decoder_dense_units: 128
+  decoder_convtranspose_filters:
+    - 128
+    - 64
+  decoder_kernel_size: 3
+  decoder_padding: same
+  decoder_activation: relu
+  decoder_layer_norm_epsilon: 1.0e-5
+  output_kernel_size: 1
+  output_activation: linear
+  loss: mse
+  lr: 1.0e-4
+  batch_size: 64
+  max_epochs: 100
+  val_fraction: 0.1
+  split_strategy: random_window
+  shuffle: true
+  early_stopping_patience: 5
+  restore_best: true
+  optimizer:
+    name: adam
+    betas:
+      - 0.9
+      - 0.999
+    epsilon: 1.0e-8
+    weight_decay: 0.0
+  scheduler:
+    name: reduce_on_plateau
+    mode: min
+    factor: 0.5
+    patience: 3
+    threshold: 1.0e-4
+    threshold_mode: rel
+    min_lr: 1.0e-7
+  reconstruction_mse_threshold: 0.01
+feature_extraction:
+  save_latent_map: true
+  save_window_vector: true
+  window_vector_reduction: temporal_mean
+  window_vector_dimensions: 128
+  save_subject_vector: true
+  subject_vector_reduction: mean_of_window_vectors
+  subject_vector_normalization: l2
+classifier:
+  input_representation: full_latent_map
+  input_layout: batch_one_time_features
+  input_shape:
+    - 1
+    - 128
+    - 128
+  filters:
+    - 64
+    - 128
+    - 256
+    - 512
+  kernel_size: 3
+  padding: same
+  activation: relu
+  batch_normalization: true
+  max_pool_kernel_size: 2
+  max_pool_after_blocks:
+    - 1
+    - 2
+    - 3
+  attention_kernel_size: 7
+  spatial_attention:
+    enabled: true
+    position: after_fourth_convolution
+    channel_reductions:
+      - mean
+      - max
+    kernel_size: 7
+    padding: same
+    activation: sigmoid
+  pooling: global_average
+  dropout: 0.5
+  mi_ssvep_output: multiclass_logits
+  mi_ssvep_loss: cross_entropy
+  erp_output: single_logit
+  erp_loss: binary_focal_with_logits
+  focal_gamma: 2.0
+  focal_alpha: training_fold_negative_fraction
+  lr: 1.0e-4
+  batch_size: 64
+  max_epochs: 100
+  val_fraction: 0.1
+  val_strategy: stratified_window
+  early_stopping_patience: 5
+  restore_best: true
+  optimizer:
+    name: adam
+    betas:
+      - 0.9
+      - 0.999
+    epsilon: 1.0e-8
+    weight_decay: 0.0
+  scheduler:
+    name: reduce_on_plateau
+    mode: min
+    factor: 0.5
+    patience: 3
+    threshold: 1.0e-4
+    threshold_mode: rel
+    min_lr: 1.0e-7
+evaluation:
+  unit: window
+  autoencoder_fit_scope: all_dataset_windows_before_classifier_folds
+  mi:
+    strategy: leave_one_subject_out
+    primary_metric: accuracy
+    shuffle_training_windows: true
+  ssvep:
+    strategy: stratified_k_fold
+    folds: 8
+    shuffle: true
+    random_state: 42
+    primary_metric: accuracy
+  erp:
+    strategy: stratified_k_fold
+    folds: 8
+    shuffle: true
+    random_state: 42
+    primary_metric: roc_auc
+  roc_auc:
+    binary_positive_label: 1
+    multiclass_strategy: one_vs_rest
+    multiclass_average: macro
+  save_fold_assignments: true
+  save_predictions: true
+  save_training_history: true
+  save_checkpoints: true
+analysis:
+  representative_datasets:
+    learning_curves:
+      - bnci2014_004
+      - bi2015a
+      - lee2019_ssvep
+    reconstruction:
+      - bnci2014_004
+      - bnci2014_008
+      - nakanishi2015
+    tsne:
+      - bnci2014_004
+      - sosulski2019
+      - nakanishi2015
+  correlation:
+    dataset: bnci2014_001
+    method: pearson
+    feature_input: window_vectors_by_subject
+    absolute_for_filtering: true
+    thresholds:
+      - 0.8
+      - 0.6
+      - 0.4
+    removal_strategy: greedy_upper_triangle_remove_higher_index
+    selected_subjects:
+      - 2
+      - 3
+      - 5
+      - 8
+  anova:
+    dataset: bnci2014_001
+    subject: 3
+    method: f_classif
+    alpha: 0.05
+    thresholds:
+      - 0.8
+      - 0.6
+      - 0.4
+  pca:
+    dataset: bnci2014_001
+    components: 2
+    whiten: false
+    random_state: 42
+  kmeans:
+    dataset: bnci2014_001
+    clusters: 4
+    n_init: 20
+    random_state: 42
+  hierarchy:
+    dataset: bnci2014_001
+    linkage: ward
+    metric: euclidean
+    distance_threshold: 7.5
+  silhouette:
+    dataset: bnci2014_001
+    metric: euclidean
+  tsne:
+    raw_input: flattened_standardized_windows
+    latent_input: window_vectors
+    color_by: subject
+    sample_cap: 5000
+    sample_strategy: deterministic_stratified_subject
+    pre_pca_components: 50
+    components: 2
+    perplexity: 30.0
+    learning_rate: auto
+    init: pca
+    iterations: 1000
+    random_state: 42
+  ablation:
+    dataset: bi2015b
+    evaluation_fraction: 0.1
+    reported_evaluation_count: 11616
+    split_strategy: deterministic_random_window
+    configurations:
+      - total_layers: 4
+        encoder_layers: 2
+        decoder_layers: 2
+        attention_heads: 8
+        role: baseline
+      - total_layers: 4
+        encoder_layers: 2
+        decoder_layers: 2
+        attention_heads: 4
+        role: reduced_heads
+      - total_layers: 2
+        encoder_layers: 1
+        decoder_layers: 1
+        attention_heads: 8
+        role: reduced_layers
+figures:
+  formats:
+    - png
+    - pdf
+    - svg
+  dpi: 300
+  style: seaborn-v0_8-whitegrid
+  reconstruction_examples:
+    selection_method: seeded_without_replacement
+    random_state: 42
+    count_per_dataset: 3
+    datasets:
+      - name: bnci2014_004
+        subject: 6
+        channel: 2
+      - name: bnci2014_008
+        subject: 4
+        channel: 3
+      - name: nakanishi2015
+        subject: 7
+        channel: 6
+verification:
+  compare_publication_tables:
+    - table_5_bciciv_2a_accuracy.csv
+    - table_6_bciciv_2b_accuracy.csv
+    - table_7_ssvep_accuracy.csv
+    - table_8_p300_auc.csv
+  compare_figure_targets:
+    - reconstruction_summary.csv
+    - figure_5_example_errors.csv
+    - figure_7_class_auc.csv
+    - figure_9_retained_feature_counts.csv
+    - figure_10_anova.csv
+    - figure_14_ablation_configurations.csv
+  numeric_tolerance: 1.0e-8
+  require_source_hashes: true

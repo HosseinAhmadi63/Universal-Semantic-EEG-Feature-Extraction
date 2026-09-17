@@ -1,0 +1,6 @@
+paradigm,dataset,metric,value
+mi,BCICIV_2a,accuracy,83.50
+mi,BCICIV_2b,accuracy,84.84
+ssvep,Lee2019_SSVEP,accuracy,98.41
+ssvep,Nakanishi2015,accuracy,99.66
+erp,eight_dataset_average,roc_auc,91.80

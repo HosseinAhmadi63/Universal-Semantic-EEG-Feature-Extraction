@@ -1,0 +1,39 @@
+cff-version: 1.2.0
+message: "If you use this repository, its code, or its results, cite the associated Journal of Neural Engineering article."
+type: software
+title: "Universal Semantic EEG Feature Extraction"
+version: 1.0.0
+date-released: 2026-09-17
+authors:
+  - family-names: Ahmadi
+    given-names: Hossein
+    orcid: "https://orcid.org/0000-0002-3650-0280"
+abstract: >-
+  Deterministic Python and PyCharm reproduction pipeline for the hierarchical
+  convolutional and Transformer autoencoder framework reported in Universal
+  semantic feature extraction from EEG signals: a task-independent framework.
+keywords:
+  - EEG
+  - semantic feature extraction
+  - task-independent representation learning
+  - autoencoder
+  - Transformer
+  - brain-computer interface
+license: MIT
+repository-code: "https://github.com/HosseinAhmadi63/Universal-Semantic-EEG-Feature-Extraction"
+preferred-citation:
+  type: article
+  title: "Universal semantic feature extraction from EEG signals: a task-independent framework"
+  authors:
+    - family-names: Ahmadi
+      given-names: Hossein
+      orcid: "https://orcid.org/0000-0002-3650-0280"
+    - family-names: Mesin
+      given-names: Luca
+      orcid: "https://orcid.org/0000-0002-8239-2348"
+  journal: Journal of Neural Engineering
+  volume: 22
+  issue: 3
+  start: "036003"
+  year: 2025
+  doi: 10.1088/1741-2552/add08f

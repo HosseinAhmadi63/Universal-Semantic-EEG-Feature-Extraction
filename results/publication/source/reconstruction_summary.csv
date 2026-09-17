@@ -1,0 +1,3 @@
+dataset,paradigm,reported_overall_mse,reported_role
+Nakanishi2015,ssvep,0.0021,lowest
+BCICIV_2a,mi,0.0094,highest

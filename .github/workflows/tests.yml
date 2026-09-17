@@ -1,0 +1,26 @@
+name: tests
+
+permissions:
+  contents: read
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - run: python -m pip install --upgrade pip
+      - run: python -m pip install -r requirements.txt
+      - run: python -m pip install -e ".[dev]"
+      - run: ruff check .
+      - run: python -m pytest
+      - run: python main.py verify --config configs/paper.yaml
+      - run: python main.py run --config configs/smoke.yaml --force

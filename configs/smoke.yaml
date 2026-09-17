@@ -1,0 +1,361 @@
+project:
+  name: Universal Semantic EEG Feature Extraction
+  package: useeg
+  version: 1.0.0
+  profile: smoke
+seed: 42
+device: cpu
+deterministic: true
+reproducibility:
+  config_hash_algorithm: sha256
+  config_hash_length: 12
+  torch_deterministic_algorithms: true
+  cudnn_benchmark: false
+  cudnn_deterministic: true
+  python_hash_seed: 42
+  float_dtype: float32
+paths:
+  data_raw: data/raw
+  data_processed: data/processed
+  runs: results/runs
+  publication_source: results/publication/source
+  publication_generated: results/publication/generated
+  verification: results/verification
+data:
+  accept_dataset_terms: true
+  cache_downloads: true
+  overwrite_downloads: false
+  reject_by_annotation: true
+  picks: eeg
+  event_interval_policy: moabb_start_and_paper_duration
+  ordering:
+    - synthetic
+datasets:
+  - name: synthetic
+    paper_name: SyntheticEEG
+    moabb_class: SyntheticEEG
+    paradigm: mi
+    enabled: true
+    subjects:
+      - 1
+      - 2
+    constructor_kwargs: {}
+    selection:
+      max_trials_per_class: 4
+    labels:
+      left_hand: 0
+      right_hand: 1
+    paper_attributes:
+      subjects: 2
+      channels: 8
+      classes: 2
+      trials_per_class: 4
+      trial_duration_seconds: 1.0
+      sampling_rate_hz: 128
+      sessions: 1
+      runs: 1
+preprocessing:
+  operation_order:
+    - resample
+    - bandpass
+    - notch
+    - ica
+    - crop
+    - window
+    - standardize
+  sfreq: 128
+  filters:
+    mi:
+      l_freq: 6.0
+      h_freq: 32.0
+    method: fir
+    design: firwin
+    window: hamming
+    phase: zero-double
+    filter_length: auto
+    l_trans_bandwidth: auto
+    h_trans_bandwidth: auto
+    pad: reflect_limited
+  notch:
+    frequency_hz: 50.0
+    method: fir
+    design: firwin
+    window: hamming
+    phase: zero-double
+    filter_length: auto
+    notch_width_hz: 0.25
+    transition_bandwidth_hz: 1.0
+  ica:
+    enabled: false
+    method: fastica
+    fit_scope: raw_run
+    n_components: 0.99
+    max_iter: auto
+    random_state: 42
+    reject_by_annotation: true
+    component_exclusion:
+      eog: mne_find_bads_eog_if_reference_exists
+      ecg: mne_find_bads_ecg_if_reference_exists
+      no_reference_fallback: exclude_none
+  window:
+    size_seconds: 1.0
+    size_samples: 128
+    hop_seconds: 0.5
+    hop_samples: 64
+    mode: overlapping_full_windows
+    pad_mode: constant
+    pad_value: 0.0
+    include_partial_tail: false
+    overrides: {}
+  standardization:
+    scope: window_channel_across_time
+    center: true
+    scale: true
+    epsilon: 1.0e-8
+autoencoder:
+  training_scope: per_dataset_all_windows_before_downstream_cross_validation
+  input_layout: batch_time_channels
+  input_samples: 128
+  encoder_conv_filters:
+    - 64
+    - 128
+  encoder_kernel_size: 3
+  encoder_padding: same
+  encoder_activation: relu
+  encoder_layer_norm_epsilon: 1.0e-5
+  d_model: 128
+  positional_encoding: sinusoidal
+  nhead: 8
+  num_encoder_layers: 2
+  num_decoder_layers: 2
+  decoder_attention: self_attention_only
+  dim_feedforward: 512
+  attention_dropout: 0.0
+  feedforward_dropout: 0.0
+  decoder_dense_units: 128
+  decoder_convtranspose_filters:
+    - 128
+    - 64
+  decoder_kernel_size: 3
+  decoder_padding: same
+  decoder_activation: relu
+  decoder_layer_norm_epsilon: 1.0e-5
+  output_kernel_size: 1
+  output_activation: linear
+  loss: mse
+  lr: 1.0e-4
+  batch_size: 8
+  max_epochs: 1
+  val_fraction: 0.25
+  split_strategy: random_window
+  shuffle: true
+  early_stopping_patience: 1
+  restore_best: true
+  optimizer:
+    name: adam
+    betas:
+      - 0.9
+      - 0.999
+    epsilon: 1.0e-8
+    weight_decay: 0.0
+  scheduler:
+    name: reduce_on_plateau
+    mode: min
+    factor: 0.5
+    patience: 1
+    threshold: 1.0e-4
+    threshold_mode: rel
+    min_lr: 1.0e-7
+  reconstruction_mse_threshold: 0.01
+feature_extraction:
+  save_latent_map: true
+  save_window_vector: true
+  window_vector_reduction: temporal_mean
+  window_vector_dimensions: 128
+  save_subject_vector: true
+  subject_vector_reduction: mean_of_window_vectors
+  subject_vector_normalization: l2
+classifier:
+  input_representation: full_latent_map
+  input_layout: batch_one_time_features
+  input_shape:
+    - 1
+    - 128
+    - 128
+  filters:
+    - 64
+    - 128
+    - 256
+    - 512
+  kernel_size: 3
+  padding: same
+  activation: relu
+  batch_normalization: true
+  max_pool_kernel_size: 2
+  max_pool_after_blocks:
+    - 1
+    - 2
+    - 3
+  attention_kernel_size: 7
+  spatial_attention:
+    enabled: true
+    position: after_fourth_convolution
+    channel_reductions:
+      - mean
+      - max
+    kernel_size: 7
+    padding: same
+    activation: sigmoid
+  pooling: global_average
+  dropout: 0.5
+  mi_ssvep_output: multiclass_logits
+  mi_ssvep_loss: cross_entropy
+  erp_output: single_logit
+  erp_loss: binary_focal_with_logits
+  focal_gamma: 2.0
+  focal_alpha: training_fold_negative_fraction
+  lr: 1.0e-4
+  batch_size: 8
+  max_epochs: 1
+  val_fraction: 0.25
+  val_strategy: stratified_window
+  early_stopping_patience: 1
+  restore_best: true
+  optimizer:
+    name: adam
+    betas:
+      - 0.9
+      - 0.999
+    epsilon: 1.0e-8
+    weight_decay: 0.0
+  scheduler:
+    name: reduce_on_plateau
+    mode: min
+    factor: 0.5
+    patience: 1
+    threshold: 1.0e-4
+    threshold_mode: rel
+    min_lr: 1.0e-7
+evaluation:
+  unit: window
+  autoencoder_fit_scope: all_dataset_windows_before_classifier_folds
+  mi:
+    strategy: leave_one_subject_out
+    primary_metric: accuracy
+    shuffle_training_windows: true
+  ssvep:
+    strategy: stratified_k_fold
+    folds: 2
+    shuffle: true
+    random_state: 42
+    primary_metric: accuracy
+  erp:
+    strategy: stratified_k_fold
+    folds: 2
+    shuffle: true
+    random_state: 42
+    primary_metric: roc_auc
+  roc_auc:
+    binary_positive_label: 1
+    multiclass_strategy: one_vs_rest
+    multiclass_average: macro
+  save_fold_assignments: true
+  save_predictions: true
+  save_training_history: true
+  save_checkpoints: true
+analysis:
+  representative_datasets:
+    learning_curves:
+      - synthetic
+    reconstruction:
+      - synthetic
+    tsne:
+      - synthetic
+  correlation:
+    dataset: synthetic
+    method: pearson
+    feature_input: window_vectors_by_subject
+    absolute_for_filtering: true
+    thresholds:
+      - 0.8
+    removal_strategy: greedy_upper_triangle_remove_higher_index
+    selected_subjects:
+      - 1
+      - 2
+  anova:
+    dataset: synthetic
+    subject: 1
+    method: f_classif
+    alpha: 0.05
+    thresholds:
+      - 0.8
+  pca:
+    dataset: synthetic
+    components: 2
+    whiten: false
+    random_state: 42
+  kmeans:
+    dataset: synthetic
+    clusters: 4
+    n_init: 2
+    random_state: 42
+  hierarchy:
+    dataset: synthetic
+    linkage: ward
+    metric: euclidean
+    distance_threshold: 7.5
+  silhouette:
+    dataset: synthetic
+    metric: euclidean
+  tsne:
+    raw_input: flattened_standardized_windows
+    latent_input: window_vectors
+    color_by: subject
+    sample_cap: 64
+    sample_strategy: deterministic_stratified_subject
+    pre_pca_components: 16
+    components: 2
+    perplexity: 5.0
+    learning_rate: auto
+    init: pca
+    iterations: 250
+    random_state: 42
+  ablation:
+    dataset: synthetic
+    evaluation_fraction: 0.1
+    reported_evaluation_count: 0
+    split_strategy: deterministic_random_window
+    configurations:
+      - total_layers: 2
+        encoder_layers: 1
+        decoder_layers: 1
+        attention_heads: 8
+        role: smoke
+figures:
+  formats:
+    - png
+  dpi: 100
+  style: seaborn-v0_8-whitegrid
+  reconstruction_examples:
+    selection_method: seeded_without_replacement
+    random_state: 42
+    count_per_dataset: 1
+    datasets:
+      - name: synthetic
+        subject: 1
+        channel: 1
+verification:
+  compare_publication_tables:
+    - table_5_bciciv_2a_accuracy.csv
+    - table_6_bciciv_2b_accuracy.csv
+    - table_7_ssvep_accuracy.csv
+    - table_8_p300_auc.csv
+  compare_figure_targets:
+    - reconstruction_summary.csv
+    - figure_5_example_errors.csv
+    - figure_7_class_auc.csv
+    - figure_9_retained_feature_counts.csv
+    - figure_10_anova.csv
+    - figure_14_ablation_configurations.csv
+  numeric_tolerance: 1.0e-8
+  require_source_hashes: true

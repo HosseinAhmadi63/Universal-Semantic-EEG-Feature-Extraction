@@ -1,0 +1,10 @@
+dataset,paradigm,subject,channel,example,reported_mse
+BCICIV_2b,mi,6,2,1,0.0058
+BCICIV_2b,mi,6,2,2,0.0039
+BCICIV_2b,mi,6,2,3,0.0179
+BNCI2014_008,erp,4,3,1,0.0038
+BNCI2014_008,erp,4,3,2,0.0028
+BNCI2014_008,erp,4,3,3,0.0051
+Nakanishi2015,ssvep,7,6,1,0.0007
+Nakanishi2015,ssvep,7,6,2,0.0020
+Nakanishi2015,ssvep,7,6,3,0.0008

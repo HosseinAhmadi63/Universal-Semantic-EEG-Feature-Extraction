@@ -1,0 +1,4 @@
+configuration,total_layers,encoder_layers,decoder_layers,attention_heads,role
+4L8H,4,2,2,8,baseline
+4L4H,4,2,2,4,reduced_heads
+2L8H,2,1,1,8,reduced_layers

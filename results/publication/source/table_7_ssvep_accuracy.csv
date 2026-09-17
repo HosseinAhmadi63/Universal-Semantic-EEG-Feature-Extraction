@@ -1,0 +1,10 @@
+method,citation,lee2019_ssvep,nakanishi2015
+CCA,44,90.97,92.53
+EEGITNet,45,86.84,80.86
+EEGNeX,46,93.81,82.65
+EEGNet,39,64.43,44.14
+MDM,47,75.38,78.77
+Barachant et al.,48,89.44,87.22
+ConvNet,38,69.36,57.47
+TRCA,49,97.78,99.20
+This study,,98.41,99.66
