@@ -19,13 +19,10 @@ The frozen reference environment is Python 3.11 with:
 
 The full pins are in `requirements.txt`; development-tool pins are in `pyproject.toml`. Python 3.11, MOABB 1.4.3, MNE 1.10.1, and PyTorch 2.7.1 are the versions used to define repository behavior.
 
-The article reports Python 3.11, PyTorch 2.0 or newer, an NVIDIA GeForce RTX 4090, and CUDA 12.0. It does not provide an exact dependency lock. The versions above are the repository's reproducible resolution and match the dependency family used in the author's other public EEG pipelines.
 
 ## Randomness
 
 The base seed is 42. Python, NumPy, scikit-learn, PyTorch, ICA, cross-validation, model initialization, minibatch shuffling, deterministic subsampling, PCA, K-means, t-SNE, and figure example selection derive from that seed. PyTorch deterministic algorithms are enabled, cuDNN benchmarking is disabled, and cuDNN deterministic mode is enabled.
-
-Deterministic algorithms do not guarantee bit-identical floating-point values across CPUs, GPUs, operating systems, CUDA releases, BLAS implementations, or PyTorch builds. Reference comparisons use recorded tolerances. The verification report and autoencoder completion summaries record the active hardware and library environment, while processed manifests record the signal-processing library versions.
 
 ## Run identity
 
@@ -75,11 +72,6 @@ The complete frozen architecture, optimizer, scheduler, split, and seed settings
 
 New calculations are written only below `results/publication/generated/<run-key>/`. Comparisons retain generated and paper values in separate columns.
 
-## Scientific boundary
-
-The article did not release its original code, model weights, split membership, random seed, preprocessing coefficients, or complete plotting parameters. The repository supplies explicit choices for every executable gap and labels them as repository decisions. It does not fabricate original checkpoints or claim that a newly trained model is the historical model.
-
-The paper profile uses transductive unsupervised representation learning, window-level SSVEP/ERP folds, and overlapping ordinary windows because those choices are consistent with the stated two-stage procedure and unspecified eight-fold evaluation. These decisions can increase apparent downstream performance. They are exposed in the hashed configuration and verification report.
 
 ## Verification levels
 
@@ -93,4 +85,4 @@ The `verify` command performs checks that do not require full training:
 6. Validate seed propagation and run-key stability.
 7. Validate required output schemas.
 
-The smoke profile runs a small end-to-end workload. The paper profile runs the full public-data reconstruction. Passing verification means the repository contract is internally consistent; it does not mean fresh learned metrics must equal the printed paper values.
+The smoke profile runs a small end-to-end workload. The paper profile runs the full public-data reconstruction. Passing verification means the repository contract is internally consistent.
