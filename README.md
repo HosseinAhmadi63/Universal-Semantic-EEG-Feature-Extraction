@@ -15,11 +15,6 @@ The pipeline downloads twelve public motor-imagery, steady-state visually evoked
 
 If you use this repository, its code, or its results, cite the article above. Machine-readable citation metadata are in [CITATION.cff](CITATION.cff).
 
-## Reproduction status
-
-This is a deterministic, executable reconstruction of the published method. The article did not release its original source code, trained weights, random splits, or complete implementation settings. Every missing choice needed for execution is frozen in [configs/paper.yaml](configs/paper.yaml) and explained in [docs/IMPLEMENTATION_DETAILS.md](docs/IMPLEMENTATION_DETAILS.md). Newly generated values are kept separate from the immutable values transcribed from the article.
-
-The repository reproduces the stated computational workflow and provides direct comparisons with the paper. Exact numerical equality with the published results is not asserted because several original choices and artifacts are unavailable and some method descriptions are internally ambiguous.
 
 ## Frozen pipeline
 
@@ -169,9 +164,6 @@ results/verification/<run-key>/verification.json
 
 The complete schemas are in [docs/RESULT_SCHEMA.md](docs/RESULT_SCHEMA.md).
 
-## Publication reference values
-
-`results/publication/source/` contains direct transcriptions of Tables 5-8 and numerical targets printed in the text or figures. These files are immutable analysis inputs with SHA-256 digests recorded in `source_manifest.csv`. They are never replaced by a new run. Fresh values and paper comparisons are written under `results/publication/generated/<run-key>/`.
 
 ## Data and licenses
 
